@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="com.project.model.Request" alias="Request"/>
+		<typeAlias type="com.project.model.Member" alias="Member"/>
+		<typeAlias type="com.project.model.Reply" alias="Reply"/>
+		<typeAlias type="com.project.model.Qna" alias="Qna"/>
+		<typeAlias type="com.project.model.Free_Source" alias="Free_Source"/>
+		<typeAlias type="com.project.model.Category" alias="Category"/>
+		<typeAlias type="com.project.model.UploadFile" alias="UploadFile"/>
+		<typeAlias type="com.project.model.Posts" alias="Posts"/>
+	</typeAliases>
+
+
+	<mappers>
+		<mapper resource="mybatis/request.xml" />
+		<mapper resource="mybatis/member.xml"/>
+		<mapper resource="mybatis/reply.xml"/>
+		<mapper resource="mybatis/qna.xml"/>
+		<mapper resource="mybatis/free_source.xml"/>
+		<mapper resource="mybatis/category.xml"/>
+		<mapper resource="mybatis/file.xml"/>
+		<mapper resource="mybatis/thumbnail.xml"/>
+	</mappers>
+	
+</configuration>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reply">
+	<select id = "replyCount" resultType = "int">
+		SELECT COUNT(*)
+		FROM reply
+	</select>
+
+	<select id = "list" resultType = "Reply">
+		SELECT *
+		FROM reply
+		WHERE number = #{number}
+	</select>
+	
+	<insert id = "add">
+		INSERT INTO reply (reply_code, number, name, reply_text, reg_date)
+		VALUES (NULL, #{number}, #{name}, #{reply_text}, NOW())
+		
+		<selectKey keyProperty="reply_code" order="AFTER" resultType="Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<select id="item" resultType="Reply">
+		SELECT *
+		FROM reply
+		WHERE reply_code=#{reply_code}
+	</select>
+	
+	<update id = "update">
+		UPDATE reply
+		SET reply_text = #{reply_text}
+		WHERE reply_code = #{reply_code}
+	</update>
+	
+	<delete id = "delete">
+		DELETE FROM reply
+		WHERE reply_code = #{reply_code}
+	</delete>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="free_source">
+	<sql id ="search">
+		<where>
+			<if test="keyword != null">
+				(title LIKE CONCAT('%', #{keyword}, '%') 
+				OR name LIKE CONCAT('%', #{keyword}, '%'))
+			</if>
+		</where>
+	</sql>
+
+	<select id = "total" resultType= "Integer">
+		SELECT COUNT(*) FROM posts 
+		<include refid="search"></include>
+	</select>
+	
+	<resultMap type="Posts" id="PostsMap">
+		<id column="number" property="number"/>
+		<result column="name" property="name"/>
+		<result column="category" property="category"/>
+		<result column="title" property="title"/>
+		<result column="writing" property="writing"/>
+		<result column="regtime" property="regtime"/>
+		
+		<association property="thumbnail1" javaType="UploadFile">
+			<id column="number" property="number"/>
+			<result column="tname" property="filename"/>
+			<result column="tunique" property="unique"/>
+		</association>
+		
+		<association property="file" javaType="UploadFile">
+			<id column="number" property="number"/>
+			<result column="fname" property="filename"/>
+			<result column="funique" property="unique"/>
+		</association>
+	</resultMap>
+	
+	<select id = "list" resultMap = "PostsMap">
+		SELECT p.*,  t.filename AS tname, t.unique AS tunique,
+		f.filename AS fname, f.unique AS funique
+		FROM posts p
+		JOIN thumbnail t ON p.number=t.number
+		JOIN file f ON p.number=f.number
+		<include refid="search"></include>
+		
+		ORDER BY regtime desc
+		LIMIT #{offset}, #{perPage}
+	</select>
+	
+	<insert id="add">
+		INSERT INTO posts VALUES(#{number}, #{name}, #{category}, #{title}, #{writing}, NOW())
+		<selectKey keyProperty="number" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+</mapper>

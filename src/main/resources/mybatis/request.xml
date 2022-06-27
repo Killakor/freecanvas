@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="request">
+	<sql id ="search">
+		<where>
+			<if test="keyword != null">
+				(title LIKE CONCAT('%', #{keyword}, '%') 
+				OR name LIKE CONCAT('%', #{keyword}, '%'))
+				AND split = 0
+			</if>
+		</where>
+	</sql>
+
+	<select id = "total" resultType= "Integer">
+		SELECT COUNT(*) FROM notice
+		<include refid="search"></include>
+	</select>
+	
+	<select id = "list" resultType = "Request">
+		SELECT * FROM notice
+		<include refid="search"></include>
+		ORDER BY regtime desc
+		LIMIT #{offset}, #{perPage}
+	</select>
+	
+	<select id="item" resultType = "Request">
+		SELECT * FROM notice
+		WHERE number = #{number} AND split = 0
+	</select>
+	
+	<insert id="add">
+		INSERT INTO notice VALUES(NULL, #{title}, #{name}, #{writing}, NOW(), 0)
+	</insert>
+	
+	
+	<update id="update">
+		UPDATE notice
+		SET title = #{title}, writing = #{writing}
+		WHERE number =  #{number} AND split = 0
+	</update>
+	
+	
+	<delete id="delete">
+		DELETE FROM notice
+		WHERE number = #{number} AND split = 0
+	</delete>
+	
+	
+</mapper>
+
